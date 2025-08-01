@@ -1,0 +1,31 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente
+.env
+.env.* 
+
+# Prisma (arquivos gerados)
+src/generated/prisma/
+
+# Diretórios de build (caso use TypeScript, Webpack etc.)
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDEs e sistemas operacionais
+.DS_Store
+Thumbs.db
+
+# Configurações locais do VSCode (opcional)
+.vscode/
+
+
+# TypeScript build cache
+*.tsbuildinfo
