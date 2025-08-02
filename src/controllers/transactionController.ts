@@ -44,6 +44,70 @@ export const createTransaction = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const updateTransaction = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { amount, description, categoryId, date } = req.body;
+
+    // Verifica se a transação existe e pertence ao usuário
+    const existingTransaction = await prisma.transaction.findFirst({
+      where: {
+        id: parseInt(id),
+        userId: req.userId
+      }
+    });
+
+    if (!existingTransaction) {
+      return res.status(404).json({ error: 'Transação não encontrada' });
+    }
+
+    const transaction = await prisma.transaction.update({
+      where: { id: parseInt(id) },
+      data: {
+        amount: parseFloat(amount),
+        description,
+        categoryId: parseInt(categoryId),
+        date: new Date(date)
+      },
+      include: {
+        category: true
+      }
+    });
+
+    res.json(transaction);
+  } catch (error) {
+    console.error('Update transaction error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteTransaction = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // Verifica se a transação existe e pertence ao usuário
+    const existingTransaction = await prisma.transaction.findFirst({
+      where: {
+        id: parseInt(id),
+        userId: req.userId
+      }
+    });
+
+    if (!existingTransaction) {
+      return res.status(404).json({ error: 'Transação não encontrada' });
+    }
+
+    await prisma.transaction.delete({
+      where: { id: parseInt(id) }
+    });
+
+    res.json({ message: 'Transação excluída com sucesso' });
+  } catch (error) {
+    console.error('Delete transaction error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 
 export const getBalance = async (req: AuthRequest, res: Response) => {
@@ -68,10 +132,10 @@ export const getBalance = async (req: AuthRequest, res: Response) => {
 
     const balance = income - expense;
 
-    res.json({ 
-      income: Number(income.toFixed(2)), 
-      expense: Number(expense.toFixed(2)), 
-      balance: Number(balance.toFixed(2)) 
+    res.json({
+      income: Number(income.toFixed(2)),
+      expense: Number(expense.toFixed(2)),
+      balance: Number(balance.toFixed(2))
     });
   } catch (error) {
     console.error('Balance error:', error);

@@ -12,21 +12,32 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-frontend-url.vercel.app'] 
+    : ['http://localhost:3000', 'http://localhost:8081', 'http://localhost:19006'],
+  credentials: true
+}));
 app.use(express.json());
+
+// Health check
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Finance API is running!',
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
 // Seed inicial das categorias
 seedCategories();
 
 // Rotas
-app.get('/', (req, res) => {
-  res.json({ message: 'Finance API is running!' });
-});
-
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/transactions', transactionRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
 });

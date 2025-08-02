@@ -1,17 +1,20 @@
 {
-  "name": "finance-app",
+  "name": "finance-app-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "postinstall": "npx prisma generate && npx prisma migrate deploy"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "engines": {
+    "node": "18.x"
+  },
+  "keywords": ["finance", "api", "nodejs", "typescript", "prisma"],
+  "author": "Seu Nome",
+  "license": "MIT",
+  "description": "Personal Finance Management API with authentication and transaction tracking",
   "dependencies": {
     "@prisma/client": "^6.13.0",
     "bcryptjs": "^3.0.2",
