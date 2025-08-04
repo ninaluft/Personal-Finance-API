@@ -8,6 +8,9 @@ node_modules/
 # Prisma (arquivos gerados)
 src/generated/prisma/
 
+# Prisma
+/prisma/schema.prisma
+
 # Diretórios de build (caso use TypeScript, Webpack etc.)
 dist/
 build/
